@@ -34,6 +34,9 @@ jobs:
           java-version: "21"
 
       - uses: android-actions/setup-android@v3
+        with:
+          # пакет 'tools' (по умолчанию) удалён из новых cmdline-tools, из-за него шаг падал
+          packages: platform-tools
 
       - uses: gradle/actions/setup-gradle@v4
 
