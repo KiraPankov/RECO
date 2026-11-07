@@ -66,11 +66,14 @@ class LlmPunctuator:
         self._lm = litert_lm
         self.system_prompt = (LLM_ASSETS / "system_prompt.txt").read_text(encoding="utf-8").strip()
         self.chat_template = (LLM_ASSETS / "qwen3_chat_template.jinja").read_text(encoding="utf-8")
+        # Кэш — во временной папке: рядом с моделью он попал бы в models-assets, а оттуда в APK.
+        # LiteRT-LM требует, чтобы папка уже существовала (в приложении это context.cacheDir).
+        cache_dir = os.path.join(tempfile.gettempdir(), "litertlm-cache")
+        os.makedirs(cache_dir, exist_ok=True)
         self.engine = litert_lm.Engine(
             model_path,
             backend=litert_lm.Backend.CPU(thread_count=threads or os.cpu_count()),
-            # Кэш — во временной папке: рядом с моделью он попал бы в models-assets, а оттуда в APK
-            cache_dir=os.path.join(tempfile.gettempdir(), "litertlm-cache"),
+            cache_dir=cache_dir,
         )
 
     def punctuate(self, text: str) -> tuple[str, str]:
