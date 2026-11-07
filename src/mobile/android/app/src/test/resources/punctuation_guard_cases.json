@@ -1,0 +1,22 @@
+[
+  {"name": "пунктуация и регистр", "original": "привет как дела", "llm": "Привет, как дела?", "accept": true, "result": "Привет, как дела?"},
+  {"name": "без изменений", "original": "Добрый день! Начнём.", "llm": "Добрый день! Начнём.", "accept": true, "result": "Добрый день! Начнём."},
+  {"name": "заменено слово", "original": "нужно доработать дизайн", "llm": "Нужно переработать дизайн.", "accept": false, "result": "нужно доработать дизайн"},
+  {"name": "добавлено слово", "original": "да конечно", "llm": "Да, ну конечно.", "accept": false, "result": "да конечно"},
+  {"name": "удалено слово", "original": "ну я не знаю", "llm": "Я не знаю.", "accept": false, "result": "ну я не знаю"},
+  {"name": "переставлены слова", "original": "я завтра приду", "llm": "Завтра я приду.", "accept": false, "result": "я завтра приду"},
+  {"name": "е на ё", "original": "все пришли", "llm": "Всё пришли.", "accept": false, "result": "все пришли"},
+  {"name": "цифры словами", "original": "мне 25 лет", "llm": "Мне двадцать пять лет.", "accept": false, "result": "мне 25 лет"},
+  {"name": "слова цифрами", "original": "мне двадцать пять лет", "llm": "Мне 25 лет.", "accept": false, "result": "мне двадцать пять лет"},
+  {"name": "добавлен дефис", "original": "кто то пришел", "llm": "Кто-то пришел.", "accept": false, "result": "кто то пришел"},
+  {"name": "тире между словами", "original": "это важно", "llm": "Это — важно.", "accept": true, "result": "Это — важно."},
+  {"name": "кавычки и скобки", "original": "он сказал привет", "llm": "Он сказал: «Привет» (тихо).", "accept": false, "result": "он сказал привет"},
+  {"name": "кавычки вокруг ответа", "original": "хорошо договорились", "llm": "«Хорошо, договорились.»", "accept": true, "result": "Хорошо, договорились."},
+  {"name": "блок размышлений", "original": "согласен", "llm": "<think>\nнужно поставить точку\n</think>\nСогласен.", "accept": true, "result": "Согласен."},
+  {"name": "пояснение перед ответом", "original": "давайте начнем", "llm": "Исправленный текст: Давайте начнем.", "accept": false, "result": "давайте начнем"},
+  {"name": "английская фраза", "original": "sorry to interrupt can we discuss it", "llm": "Sorry to interrupt, can we discuss it?", "accept": true, "result": "Sorry to interrupt, can we discuss it?"},
+  {"name": "апостроф внутри слова", "original": "i don't know", "llm": "I don't know.", "accept": true, "result": "I don't know."},
+  {"name": "лишние пробелы и перевод строки", "original": "раз два", "llm": "  Раз,\n два. ", "accept": true, "result": "Раз, два."},
+  {"name": "пустой ответ", "original": "раз два", "llm": "   ", "accept": false, "result": "раз два"},
+  {"name": "смена регистра имени", "original": "я живу в москве", "llm": "Я живу в Москве.", "accept": true, "result": "Я живу в Москве."}
+]

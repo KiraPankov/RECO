@@ -1,0 +1,101 @@
+# Тесты качества на тех же моделях, что в APK (Actions → «Тесты качества» → Run workflow):
+# - тестовые диалоги artifacts/test-results: WER, диаризация, границы реплик, работа LLM;
+# - вручную размеченные контрольные наборы open_stt: WER распознавания и пунктуация LLM.
+# Результаты — в сводке запуска и в артефакте eval-results.
+name: Тесты качества
+
+on:
+  workflow_dispatch:
+    inputs:
+      sets:
+        description: "Наборы open_stt через запятую"
+        default: "asr_calls_2_val,public_youtube700_val,buriy_audiobooks_2_val"
+      max_utts:
+        description: "Сколько фраз брать из каждого набора (0 — все)"
+        default: "2000"
+      llm:
+        description: "Включить пунктуацию LLM"
+        type: boolean
+        default: true
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - uses: android-actions/setup-android@v3
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Кэш моделей
+        uses: actions/cache@v4
+        with:
+          path: src/mobile/android/app/models-assets
+          key: models-${{ hashFiles('src/mobile/android/app/models.gradle.kts') }}
+
+      - name: Загрузка моделей (те же, что в APK)
+        working-directory: src/mobile/android
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon :app:fetchModels
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Установка
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          pip install -q "sherpa-onnx==2.0.1" "litert-lm-api==0.19.1" soundfile numpy requests
+
+      - name: Самопроверка
+        working-directory: tools/eval
+        run: |
+          python test_openstt_utils.py
+          python llm_punctuation.py
+
+      - name: Тестовые диалоги
+        working-directory: tools/eval
+        run: |
+          python final_eval.py ../../artifacts/test-results ${{ inputs.llm && ' ' || '--no-llm' }}
+          {
+            echo "## Тестовые диалоги"
+            echo
+            python - <<'EOF'
+          import csv
+          rows = list(csv.DictReader(open("../../artifacts/test-results/results.csv")))
+          cols = ["test_id", "wer_pct", "diarization_acc_pct", "speakers_found", "speakers_reference",
+                  "start_err_ms", "end_err_ms", "utterances", "reference_utterances", "rtf",
+                  "llm_changed", "llm_unchanged", "llm_rejected"]
+          print("| " + " | ".join(cols) + " |")
+          print("|" + "---|" * len(cols))
+          for r in rows:
+              print("| " + " | ".join(r[c] for c in cols) + " |")
+          EOF
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Контрольные наборы open_stt
+        working-directory: tools/eval
+        run: |
+          python openstt_eval.py --out ../../eval-out/openstt --sets "${{ inputs.sets }}" \
+            --max-utts "${{ inputs.max_utts }}" ${{ inputs.llm && ' ' || '--no-llm' }}
+          { echo; echo "## open_stt (ручная разметка)"; echo; cat ../../eval-out/openstt/summary.md; } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: eval-results
+          path: |
+            artifacts/test-results/results.csv
+            artifacts/test-results/output/
+            eval-out/openstt/*.csv
+            eval-out/openstt/*.md
+            eval-out/openstt/*.jsonl
+          retention-days: 30

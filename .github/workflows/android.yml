@@ -1,0 +1,77 @@
+# Сборка APK со встроенными моделями.
+# - push в main/master, pull request, ручной запуск — сборка и юнит-тесты (проверка, что всё собирается);
+# - тег вида v1.0.0 — сборка, тесты и публикация APK в GitHub Releases.
+#   Создать тег: git tag v1.0.0 && git push origin v1.0.0
+name: Android APK
+
+on:
+  push:
+    branches: [main, master]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write  # нужно для создания релиза
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        working-directory: src/mobile/android
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - uses: android-actions/setup-android@v3
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      # Модели (~1 ГБ) скачиваются один раз и хранятся в кэше Actions
+      - name: Кэш моделей
+        uses: actions/cache@v4
+        with:
+          path: src/mobile/android/app/models-assets
+          key: models-${{ hashFiles('src/mobile/android/app/models.gradle.kts') }}
+
+      - name: Загрузка моделей
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon :app:fetchModels
+          cat app/models-assets/models/manifest.txt
+          du -sh app/models-assets/models
+
+      - name: Юнит-тесты
+        run: ./gradlew --no-daemon :app:testDebugUnitTest
+
+      - name: Сборка APK
+        run: |
+          ./gradlew --no-daemon :app:assembleRelease
+          NAME="RECO-${GITHUB_REF_NAME//\//-}.apk"
+          cp app/build/outputs/apk/release/app-release.apk "$RUNNER_TEMP/$NAME"
+          echo "APK_PATH=$RUNNER_TEMP/$NAME" >> "$GITHUB_ENV"
+          ls -lh "$RUNNER_TEMP/$NAME"
+          echo "### APK: $(du -h "$RUNNER_TEMP/$NAME" | cut -f1)" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Публикация в Releases
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" > /dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" "$APK_PATH" --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" "$APK_PATH" \
+              --title "RECO $GITHUB_REF_NAME" \
+              --notes "APK со встроенными моделями: работает без интернета. Android 8.0+, arm64-v8a или x86_64. Установка: скачайте APK на телефон и откройте его (разрешите установку из неизвестных источников)."
+          fi

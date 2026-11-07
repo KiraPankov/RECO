@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- RECO: передний слой адаптивной иконки (звуковая волна), 108x108dp -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+    <path android:fillColor="#FFE8432E" android:pathData="M27.35,44 H30.65 A2.6,2.6 0 0 1 33.25,46.6 V61.4 A2.6,2.6 0 0 1 30.65,64 H27.35 A2.6,2.6 0 0 1 24.75,61.4 V46.6 A2.6,2.6 0 0 1 27.35,44 Z"/>
+    <path android:fillColor="#FFF2792B" android:pathData="M39.85,37 H43.15 A2.6,2.6 0 0 1 45.75,39.6 V68.4 A2.6,2.6 0 0 1 43.15,71 H39.85 A2.6,2.6 0 0 1 37.25,68.4 V39.6 A2.6,2.6 0 0 1 39.85,37 Z"/>
+    <path android:fillColor="#FFF6A623" android:pathData="M52.35,31 H55.65 A2.6,2.6 0 0 1 58.25,33.6 V74.4 A2.6,2.6 0 0 1 55.65,77 H52.35 A2.6,2.6 0 0 1 49.75,74.4 V33.6 A2.6,2.6 0 0 1 52.35,31 Z"/>
+    <path android:fillColor="#FFF7D33C" android:pathData="M64.85,39 H68.15 A2.6,2.6 0 0 1 70.75,41.6 V66.4 A2.6,2.6 0 0 1 68.15,69 H64.85 A2.6,2.6 0 0 1 62.25,66.4 V41.6 A2.6,2.6 0 0 1 64.85,39 Z"/>
+    <path android:fillColor="#FFEE5A2C" android:pathData="M77.35,46 H80.65 A2.6,2.6 0 0 1 83.25,48.6 V59.4 A2.6,2.6 0 0 1 80.65,62 H77.35 A2.6,2.6 0 0 1 74.75,59.4 V48.6 A2.6,2.6 0 0 1 77.35,46 Z"/>
+</vector>

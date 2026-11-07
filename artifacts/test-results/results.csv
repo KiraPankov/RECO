@@ -1,0 +1,4 @@
+test_id,file,duration_s,processing_s,rtf,wer_pct,diarization_acc_pct,speakers_found,speakers_reference,start_err_ms,end_err_ms,utterances,reference_utterances,punct_rate_pct,llm_changed,llm_unchanged,llm_rejected,llm_skipped
+clean,audio/clean.wav,54.0,11.5,0.213,0.9,99.0,4,4,23,68,8,8,100.0,0,0,0,0
+noisy_snr5,audio/noisy_snr5.wav,54.0,13.3,0.246,10.3,99.0,4,4,105,211,8,8,100.0,0,0,0,0
+quiet_dc,audio/quiet_dc.wav,54.0,12.2,0.226,0.9,98.9,4,4,25,70,8,8,100.0,0,0,0,0
