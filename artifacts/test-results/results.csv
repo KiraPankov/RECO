@@ -2,3 +2,6 @@ test_id,file,duration_s,processing_s,rtf,wer_pct,diarization_acc_pct,speakers_fo
 clean,audio/clean.wav,54.0,11.5,0.213,0.9,99.0,4,4,23,68,8,8,100.0,0,0,0,0
 noisy_snr5,audio/noisy_snr5.wav,54.0,13.3,0.246,10.3,99.0,4,4,105,211,8,8,100.0,0,0,0,0
 quiet_dc,audio/quiet_dc.wav,54.0,12.2,0.226,0.9,98.9,4,4,25,70,8,8,100.0,0,0,0,0
+clean_llm_ci,audio/clean.wav,54.0,37.5,0.694,1.7,99.0,4,4,23,68,8,8,100.0,0,1,7,0
+noisy_snr5_llm_ci,audio/noisy_snr5.wav,54.0,49.5,0.916,12.1,99.0,4,4,105,211,8,8,100.0,1,1,6,0
+quiet_dc_llm_ci,audio/quiet_dc.wav,54.0,25.7,0.476,0.9,98.9,4,4,25,70,8,8,100.0,0,0,8,0
