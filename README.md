@@ -50,6 +50,7 @@ Android-приложение **локально** превращает ауди�
 | `config/example.env` | Справочный список параметров конвейера |
 | `docs/ARCHITECTURE.md` | Архитектура и применяемые модели |
 | `docs/PROTOCOL.md` | Протокол обработки и формат JSON-вывода |
+| [`docs/RECO-presentation.pdf`](docs/RECO-presentation.pdf) | Презентация проекта к финалу |
 | `docs/LIMITATIONS.md` | Ограничения решения |
 | `docs/TEST_RESULTS.md` | Методика и результаты собственных тестов |
 | `artifacts/test-results/` | Тестовые записи, эталон, выходные JSON и `results.csv` |
